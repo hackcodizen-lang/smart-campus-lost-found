@@ -1,7 +1,7 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
-const API_ORIGIN = API_BASE_URL.startsWith('http')
+const ASSET_BASE_URL = import.meta.env.VITE_ASSET_BASE_URL || (API_BASE_URL.startsWith('http')
   ? API_BASE_URL.replace(/\/api\/?$/, '')
-  : '';
+  : '');
 
 /**
  * Get auth token from localStorage
@@ -161,8 +161,8 @@ export const notificationsApi = {
 export const getAssetUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http')) return path;
-  if (API_ORIGIN) {
-    return `${API_ORIGIN}${path.startsWith('/') ? path : `/${path}`}`;
+  if (ASSET_BASE_URL) {
+    return `${ASSET_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`;
   }
   return path;
 };
