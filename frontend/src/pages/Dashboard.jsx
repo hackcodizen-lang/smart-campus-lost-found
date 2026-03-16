@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { itemsApi, matchesApi, notificationsApi } from '../services/api';
+import { itemsApi, matchesApi, notificationsApi, getAssetUrl } from '../services/api';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -283,7 +283,7 @@ const Dashboard = () => {
                   >
                     <div className="relative h-44 overflow-hidden">
                       <img
-                        src={item.image?.startsWith('http') ? item.image : `${item.image}`}
+                        src={getAssetUrl(item.image)}
                         alt={item.title || 'Found item'}
                         className="w-full h-full object-cover"
                       />
@@ -421,7 +421,7 @@ const Dashboard = () => {
               </div>
               <div className="grid md:grid-cols-2 gap-6 p-6">
                 <img
-                  src={selectedFound.image?.startsWith('http') ? selectedFound.image : `${selectedFound.image}`}
+                  src={getAssetUrl(selectedFound.image)}
                   alt={selectedFound.title || 'Found item'}
                   className="w-full h-56 object-cover rounded-xl"
                 />

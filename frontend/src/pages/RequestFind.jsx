@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { itemsApi } from '../services/api';
+import { itemsApi, getAssetUrl } from '../services/api';
 import { useToast } from '../context/ToastContext';
 import ImageUpload from '../components/ImageUpload';
 
@@ -255,7 +255,7 @@ const RequestFind = () => {
               >
                 <div className="relative h-44 overflow-hidden">
                   <img
-                    src={item.image?.startsWith('http') ? item.image : `${item.image}`}
+                    src={getAssetUrl(item.image)}
                     alt={item.title || 'Found item'}
                     className="w-full h-full object-cover"
                   />

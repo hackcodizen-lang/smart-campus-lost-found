@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { getAssetUrl } from '../services/api';
 
 const MatchCard = ({ match, onClaim, onConfirm, onReject }) => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -10,7 +11,7 @@ const MatchCard = ({ match, onClaim, onConfirm, onReject }) => {
 
   const getImageUrl = (image) => {
     if (!image) return '/placeholder.jpg';
-    return image.startsWith('http') ? image : image;
+    return getAssetUrl(image);
   };
 
   const formatDate = (date) => {

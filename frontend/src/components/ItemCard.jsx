@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { getAssetUrl } from '../services/api';
 
 const ItemCard = ({ 
   item, 
@@ -38,7 +39,7 @@ const ItemCard = ({
       {/* Image */}
       <div className="relative h-48 overflow-hidden">
         <img
-          src={item.image?.startsWith('http') ? item.image : `${item.image}`}
+          src={getAssetUrl(item.image)}
           alt={item.title || 'Item image'}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
