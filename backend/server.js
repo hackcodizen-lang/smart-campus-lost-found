@@ -35,8 +35,20 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS configuration - allow requests from frontend
+const allowedOrigins = [
+  process.env.CORS_ORIGIN,
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://127.0.0.1:5173'
+].filter(Boolean);
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (!allowedOrigins.length) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('CORS not allowed'));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -68,21 +80,20 @@ app.get('/api/health', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// Connect to MongoDB Memory Server and start server
+// Connect to MongoDB and start server
 const startServer = async () => {
   try {
-    console.log('📦 Starting MongoDB Memory Server...');
-    
-    // Start MongoDB Memory Server
-    const mongoServer = await MongoMemoryServer.create();
-    const mongoUri = mongoServer.getUri();
-    
-    console.log('✅ MongoDB Memory Server started');
-    
-    // Connect to MongoDB
-    await mongoose.connect(mongoUri);
-    console.log('✅ Connected to MongoDB Memory Server');
-    
+    if (process.env.MONGODB_URI) {
+      await mongoose.connect(process.env.MONGODB_URI);
+      console.log('Connected to MongoDB');
+    } else {
+      console.log('Starting MongoDB Memory Server...');
+      const mongoServer = await MongoMemoryServer.create();
+      const mongoUri = mongoServer.getUri();
+      await mongoose.connect(mongoUri);
+      console.log('Connected to MongoDB Memory Server');
+    }
+
     const seedDefaults = async () => {
       const adminEmail = process.env.ADMIN_EMAIL || 'admin@smartcampus.edu';
       const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123';
@@ -133,3 +144,4 @@ const startServer = async () => {
 };
 
 startServer();
+
